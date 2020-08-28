@@ -1,0 +1,35 @@
+public static void main(String[] args) {
+		System.setProperty("webdriver.chrome.driver","drivers/chromedriver.exe");
+		WebDriver driver = new ChromeDriver();
+		driver.get("https://www.webstaurantstore.com/");
+		driver.manage().window().maximize();
+		driver.manage().timeouts().implicitlyWait(60, TimeUnit.SECONDS);
+		// Step 2: Search for 'stainless work table'.
+		WebElement search = driver.findElement(By.xpath("//*[@id='searchval']"));
+		search.click();
+		search.sendKeys("stainless work table");
+		driver.findElement(By.xpath("//*[@id='searchForm']/button")).click();
+		// Step 3: Check the search result ensuring every product item has the word
+		// 'Table' its title
+		List<WebElement> rows = driver.findElements(By.xpath("//div[@id='product_listing']//a[@class='description']"));
+		System.out.println("Number of rows " + rows.size());
+		for (int i = 1; i < rows.size(); i++) {
+			String rowText = rows.get(i).getText();
+			if (rowText.contains("Table")) {
+
+				System.out.println(rowText);
+
+			}
+
+		}
+//Step 4:Add the last of found items to Cart.
+
+		driver.findElement(By.xpath("(//input[@name='addToCartButton'])[last()]")).click();
+
+		driver.findElement(By.xpath("//*[text()='View Cart']")).click();
+//Step 5:Empty Cart.
+
+		driver.findElement(By.xpath("//a[text()='Empty Cart']")).click();
+		driver.findElement(By.xpath("//button[text()='Empty Cart']")).click();
+	}
+
